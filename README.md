@@ -96,10 +96,10 @@ We need to get release data (e.g. the manifest file, image name etc) from Jenkin
 
 e.g. 
 ```
-npm run kube-release \
+npm run kubernaut-release \
   --manifest ./manifest.json \
   --image docker-registry.tescloud.com/tescloud/app-h2o:23 \
-  --server https://kube-deployment-tool.tescloud.com \
+  --server https://kubernaut.tescloud.com \
 ```
 Would result in
 ```
