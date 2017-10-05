@@ -1,4 +1,6 @@
-# kube-hackday
+# kubernaut
+> Definition of kubernaut - an expert or habitual user of the Kubernetes., a person who uses computer technology to experience containerisation.
+
 See https://github.com/tes/infra/issues/1857 for background
 
 ## Goal
