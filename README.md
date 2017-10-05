@@ -72,17 +72,19 @@ Discover a kubernetes deployment pipeline
 
 ## MVP Tasks
 ### Hello World
-Write a hello world application including
+Write a hello world application which respond with "Hello World" over an HTTP interface. For MVP don't worry about setting up a TES style electric project. Do the simplest thing, e.g. [http-server](https://www.npmjs.com/package/http-server) serving a static page
+
+Additionally the application should include:
 
 * a Dockerfile
-* Kubernetes Manifest Template
+* Kubernetes manifest template
 
-The Kubernetes template should include a placeholder for the containers image, but can hard code everything else. Use a templating tool which will work nicely with both yaml and json.
+The Dockerfile should be very simple. I suggest basing it on node:8-alpine, running npm install and launching node index.js
 
-The application should respond with "Hello World" over an HTTP interface. For MVP don't worry about setting up a TES style electric project. Do the simplest thing, e.g. [http-server](https://www.npmjs.com/package/http-server) serving a static page running in an ```node:8-alpine``` container .
+The Kubernetes manifest template should use a placeholder for the containers image, but can hard code everything else. Use a templating language which will work nicely with both yaml and json.
 
 ### Jenkins Job
-Create a Jenkins job to build the docker image and publish it to the repository
+Create a Jenkins job to build the docker image and publish it to the tes docker repository
 
 ### Release Tool
 We need to get release data (e.g. the manifest file, image name etc) from Jenkins to the Deployment Tool. Write a node module for POSTing the following information to the Deployment tool
