@@ -117,13 +117,10 @@ Content-Type: application/json
   }
 }
 ```
-Fail on non 2XX series responses.
-
-Implement the node module so that it can be called using an npm script ```npm run kube-release``` see [prerelease-ftw](https://github.com/guidesmiths/prerelease-ftw) for an example. 
-
-Publish the node module to sinopia
-Update the Hello World app to include the kube-release script
-Update the Jenkins Job to call the kube-release script
+* Implement the node module so that it can be called using an npm script ```npm run kube-release``` see [prerelease-ftw](https://github.com/guidesmiths/prerelease-ftw) for an example. 
+* Publish the node module to sinopia
+* Update the Hello World app to include the kube-release script
+* Update the Jenkins Job to call the kube-release script. Ensure the build fails on error.
 
 ### Deployment Tool
 The Deployment tool needs to 
