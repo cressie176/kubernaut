@@ -77,7 +77,7 @@ Write a hello world application including
 * a Dockerfile
 * Kubernetes Manifest Template
 
-The Kubernetes template should include a placeholder for the containers image. Use a templating tool which will work nicely with both yaml and json.
+The Kubernetes template should include a placeholder for the containers image, but can hard code everything else. Use a templating tool which will work nicely with both yaml and json.
 
 The application should respond with "Hello World" over an HTTP interface. For MVP don't worry about setting up a TES style electric project. Do the simplest thing, e.g. [http-server](https://www.npmjs.com/package/http-server) serving a static page running in an ```node:8-alpine``` container .
 
