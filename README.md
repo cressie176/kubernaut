@@ -74,8 +74,8 @@ Discover a kubernetes deployment pipeline
 ### Hello World
 Write a hello world application including
 
-* a Dockerfile, 
-* Kubernetes Manifest Template. 
+* a Dockerfile
+* Kubernetes Manifest Template
 
 The Kubernetes template should include a placeholder for the containers image. Use a templating tool which will work nicely with both yaml and json.
 
