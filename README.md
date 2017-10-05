@@ -84,7 +84,7 @@ The Dockerfile should be very simple. I suggest basing it on node:8-alpine, runn
 The Kubernetes manifest template should use a placeholder for the containers image, but can hard code everything else. Use a templating language which will work nicely with both yaml and json.
 
 ### Jenkins Job
-Create a Jenkins job to build the docker image and publish it to the tes docker repository
+Create a Jenkins job to build the docker image and publish it to the TES docker repository
 
 ### Release Tool
 We need to get release data (e.g. the manifest file, image name etc) from Jenkins to the Deployment Tool. Write a command line node module for POSTing the following information to the Deployment tool
