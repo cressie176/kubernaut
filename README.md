@@ -87,11 +87,43 @@ The Kubernetes manifest template should use a placeholder for the containers ima
 Create a Jenkins job to build the docker image and publish it to the tes docker repository
 
 ### Release Tool
-We need to get release data (e.g. the manifest file, image name etc) from Jenkins to the Deployment Tool. Write a node module for POSTing the following information to the Deployment tool
+We need to get release data (e.g. the manifest file, image name etc) from Jenkins to the Deployment Tool. Write a command line node module for POSTing the following information to the Deployment tool
 
 * The Kubernets Manifest File
-* SCM Details
 * Image Details
+
+e.g. 
+```
+npm run kube-release \
+  --manifest ./manifest.json \
+  --image docker-registry.tescloud.com/tescloud/app-h2o:23 \
+  --server https://kube-deployment-tool.tescloud.com \
+```
+Would result in
+```
+POST /api/releases
+Content-Type: application/json
+
+{
+  "manifest": {
+    "content-type": "application/json",
+    "content": "contents of the template"
+  },
+  "image": {
+    "registry": "docker.tescloud.com",
+    "user": "tescloud",
+    "repo": "app-h2o",
+    "tag": "23"
+  }
+}
+```
+Fail on non 2XX series responses.
+
+Implement the node module so that it can be called using an npm script ```npm run kube-release``` see [prerelease-ftw](https://github.com/guidesmiths/prerelease-ftw) for an example. 
+
+Publish the node module to sinopia
+Update the Hello World app to include the kube-release script
+Update the Jenkins Job to call the kube-release script
 
 ### Deployment Tool
 The Deployment tool needs to 
