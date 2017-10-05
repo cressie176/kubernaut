@@ -108,3 +108,5 @@ We need access to a kubernetes cluster and instructions for installing / configu
 1. Team based permissions
 1. Support yaml and json manifests
 1. Define service criteria (e.g. single node process, logs to stdout, responds to SIGINT and SIGTERM, exposes liveness and readiness endpoints)
+1. HipChat integration
+1. Audit All Releases
