@@ -103,7 +103,7 @@ We need access to a kubernetes cluster and instructions for installing / configu
 1. Add a UI to the Deployment Tool, listing releases
 1. Define default, environmental and service specific settings for things like instancess, resource limits etc
 1. Support promotions
-1. Release Tool authentication
+1. Release Tool authentication (API KEY?)
 1. UI authentication (github)
 1. Team based permissions
 1. Support yaml and json manifests
