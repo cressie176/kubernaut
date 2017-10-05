@@ -144,3 +144,4 @@ We need access to a kubernetes cluster and instructions for installing / configu
 1. Define service criteria (e.g. single node process, logs to stdout, responds to SIGINT and SIGTERM, exposes liveness and readiness endpoints)
 1. HipChat integration
 1. Audit All Releases
+1. Wrap the release-too in a docker image so Jenkins doesn't need node installed
