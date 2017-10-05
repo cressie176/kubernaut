@@ -99,7 +99,7 @@ The Deployment tool needs to
 ### Kubernets Cluster
 We need access to a kubernetes cluster and instructions for installing / configuring CLI tools
 
-## Future Improvements
+## Next Steps
 1. Add a UI to the Deployment Tool, listing releases
 1. Define default, environmental and service specific settings for things like instancess, resource limits etc
 1. Support promotions
