@@ -84,7 +84,7 @@ class DeploymentsTable extends Component {
         </table>
         <TablePagination
           pages={deployments.pages}
-          page={deployments.page}
+          currentPage={deployments.currentPage}
           limit={deployments.limit}
           fetchContent={fetchDeployments}
         />
@@ -100,7 +100,7 @@ DeploymentsTable.propTypes = {
     limit: PropTypes.number.isRequired,
     offset: PropTypes.number.isRequired,
     pages: PropTypes.number.isRequired,
-    page: PropTypes.number.isRequired,
+    currentPage: PropTypes.number.isRequired,
     count: PropTypes.number.isRequired,
     items: PropTypes.array.isRequired,
   }),
