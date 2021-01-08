@@ -291,6 +291,7 @@ export default function(options = {}) {
           service: deployment.release.service.id,
           cluster_name: deployment.namespace.cluster.name,
           service_name: deployment.release.service.name,
+          commit: deployment.release.attributes.commit,
           message: broadcast.format.deployment(await store.getDeployment(deployment.id)),
         });
         const code = await kubernetes.rolloutStatus(
@@ -311,6 +312,7 @@ export default function(options = {}) {
             service: deployment.release.service.id,
             cluster_name: deployment.namespace.cluster.name,
             service_name: deployment.release.service.name,
+            commit: deployment.release.attributes.commit,
             message: broadcast.format.deployment(await store.getDeployment(deployment.id)),
           });
         } else {
@@ -322,6 +324,7 @@ export default function(options = {}) {
             service: deployment.release.service.id,
             cluster_name: deployment.namespace.cluster.name,
             service_name: deployment.release.service.name,
+            commit: deployment.release.attributes.commit,
             message: broadcast.format.deployment(await store.getDeployment(deployment.id)),
           });
         }
