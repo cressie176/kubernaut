@@ -1,5 +1,5 @@
 import Promise from 'bluebird';
-import { safeDump } from 'js-yaml';
+import { dump } from 'js-yaml';
 import hogan from 'hogan.js';
 
 const acceptedTags = ['_v', '_t'];
@@ -87,5 +87,5 @@ export async function getIngressManifest(store, ingressVersion, cluster) {
     }
   }));
 
-  return entryDocs.map(doc => safeDump(doc, { lineWidth: 120 })).join('---\n');
+  return entryDocs.map(doc => dump(doc, { lineWidth: 120 })).join('---\n');
 }
