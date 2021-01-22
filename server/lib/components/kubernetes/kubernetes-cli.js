@@ -153,6 +153,13 @@ async function applyDocs(clients, docsByType = {}, namespace, emitter) {
       continue;
     }
 
+    if (docType === 'persistentvolumeclaim') {
+      for (const doc of docsByType[docType]) {
+        await patchResponseStatus(k8sApi.patchNamespacedPersistentVolumeClaim(doc.metadata.name, namespace, doc, undefined, undefined, 'kubernaut', 'true', { headers: ssaHeaders }), emitter);
+      }
+      continue;
+    }
+
     emitter.emit('error', { writtenOn: new Date(), writtenTo: 'stderr', content: `[${docType}] detected and is unsupported at this time.` });
   }
 }
@@ -214,6 +221,12 @@ async function deleteObjects(clients, toDelete, namespace, emitter) {
 
       if (objectType === 'configmap') {
         await k8sApi.deleteNamespacedConfigMap(name, namespace);
+        emitter.emit('data', { writtenOn: new Date(), writtenTo: 'stdout', content: `${objectType}/${name} deleted`});
+        continue;
+      }
+
+      if (objectType === 'persistentvolumeclaim') {
+        await k8sApi.deleteNamespacedPersistentVolumeClaim(name, namespace);
         emitter.emit('data', { writtenOn: new Date(), writtenTo: 'stdout', content: `${objectType}/${name} deleted`});
         continue;
       }
