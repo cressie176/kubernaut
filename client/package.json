@@ -44,13 +44,15 @@
     "test": "CI=true TZ=UTC react-scripts test --env=jsdom --verbose",
     "test-w": "TZ=UTC react-scripts test --env=jsdom --verbose",
     "postbuild": "postcss --use postcss-custom-properties --replace build/**/*.css",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "postinstall": "patch-package"
   },
   "devDependencies": {
     "enzyme": "^3.11.0",
     "fetch-mock": "^9.11.0",
     "jest-cli": "^26.6.3",
     "mock-store": "0.0.1",
+    "patch-package": "^6.2.2",
     "postcss-cli": "^8.3.1",
     "postcss-custom-properties": "^10.0.0",
     "redux-mock-store": "^1.5.4"
