@@ -167,6 +167,55 @@ export default function(options) {
       });
     }
 
+    async function findSecrets(search, limit = 20, offset = 0) {
+      logger.debug(`Listing up to ${limit} secret versions matching search '${search}' from offset ${offset} for account`);
+
+      const builder = sqb
+        .select('v.id', 'v.comment', 'v.created_by', 'v.created_on', 'a.display_name', 'v.service', 's.name service_name', 'sr.id registry_id', 'sr.name registry_name', 'v.namespace', 'n.name namespace_name', 'n.color namespace_color', 'c.id cluster_id', 'c.name cluster_name', 'c.color cluster_color')
+        .from('secret_version_data svd')
+        .join(sqb.join('secret_version v').on(Op.eq('svd.version', raw('v.id'))))
+        .join(sqb.join('active_service__vw s').on(Op.eq('v.service', raw('s.id'))))
+        .join(sqb.join('active_registry__vw sr').on(Op.eq('s.registry', raw('sr.id'))))
+        .join(sqb.join('active_namespace__vw n').on(Op.eq('v.namespace', raw('n.id'))))
+        .join(sqb.join('active_cluster__vw c').on(Op.eq('n.cluster', raw('c.id'))))
+        .join(sqb.join('account a').on(Op.eq('v.created_by', raw('a.id'))))
+        .orderBy('v.created_on desc', 's.name')
+        .limit(limit)
+        .offset(offset);
+
+      const countBuilder = sqb
+        .select(raw('count(*) count'))
+        .from('secret_version_data svd')
+        .join(sqb.join('secret_version v').on(Op.eq('svd.version', raw('v.id'))))
+        .join(sqb.join('active_service__vw s').on(Op.eq('v.service', raw('s.id'))))
+        .join(sqb.join('active_registry__vw sr').on(Op.eq('s.registry', raw('sr.id'))))
+        .join(sqb.join('active_namespace__vw n').on(Op.eq('v.namespace', raw('n.id'))))
+        .join(sqb.join('active_cluster__vw c').on(Op.eq('n.cluster', raw('c.id'))))
+        .join(sqb.join('account a').on(Op.eq('v.created_by', raw('a.id'))));
+
+      [builder, countBuilder].forEach(b => {
+        b.where(Op.like('svd.value', `%${search}%`));
+      });
+
+      return db.withTransaction(async connection => {
+        const [findResult, countResult] = await Promise.all([
+          connection.query(db.serialize(builder, {}).sql),
+          connection.query(db.serialize(countBuilder, {}).sql),
+        ]);
+
+        const items = findResult.rows.map(toVersion);
+        const count = parseInt(countResult.rows[0].count, 10);
+        logger.debug(`Returning ${items.length} of ${count} secret versions`);
+
+        return {
+          limit,
+          offset,
+          count,
+          items,
+        };
+      });
+    }
+
     function toVersion(row) {
       return new SecretVersion({
         id: row.id,
@@ -203,6 +252,7 @@ export default function(options) {
       getVersionOfSecretWithDataById,
       listVersionsOfSecret,
       getLatestDeployedSecretForReleaseToNamespace,
+      findSecrets,
     });
   }
 

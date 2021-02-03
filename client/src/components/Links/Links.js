@@ -360,3 +360,13 @@ export const NewIngressVersionLink = ({ container, children, serviceName, regist
 
   return <Tag {...props}>{children || <span>New ingress version</span>}</Tag>;
 };
+
+export const AdminSecretsLink = ({ container, children }) => {
+  const Tag = container ? LinkContainer : Link;
+  const props = {
+    to: '/admin/secrets',
+    ...container && { exact: true }
+  };
+
+  return <Tag {...props}>{children || <span>Secrets</span>}</Tag>;
+};

@@ -6,6 +6,22 @@ export default function(options = {}) {
   function start({ app, store, auth }, cb) {
     app.use('/api/secrets', auth('api'));
 
+    app.get('/api/secrets/search', async (req, res, next) => {
+      try {
+        const hasGlobalAdmin = !!(await store.rolesForSystem(req.user.id, req.user)).currentRoles.find(({ name, global }) => (name === 'admin' && global));
+        if (!hasGlobalAdmin) return next(Boom.forbidden());
+
+        const limit = req.query.limit ? parseInt(req.query.limit, 10) : undefined;
+        const offset = req.query.offset ? parseInt(req.query.offset, 10) : undefined;
+        const search = req.query.search && typeof req.query.search === 'string' ? req.query.search : '';
+
+        const result = await store.findSecrets(search, limit, offset);
+        return res.json(result);
+      } catch (err) {
+        next(err);
+      }
+    });
+
     app.get('/api/secrets/:id', async (req, res, next) => {
       try {
         const meta = { date: new Date(), account: { id: req.user.id } };

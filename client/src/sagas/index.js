@@ -6,6 +6,7 @@ import accountsSagas from './accounts';
 import adminSagas from './admin';
 import adminIngressSagas from './adminIngress';
 import adminRestoreSagas from './adminRestore';
+import adminSecretsSagas from './adminSecrets';
 import auditSagas from './audit';
 import clusterEditSagas from './clusterEdit';
 import clustersSagas from './clusters';
@@ -49,6 +50,7 @@ export default function* rootSaga() {
     ...adminSagas,
     ...adminIngressSagas,
     ...adminRestoreSagas,
+    ...adminSecretsSagas,
     ...auditSagas,
     ...clusterEditSagas,
     ...clustersSagas,

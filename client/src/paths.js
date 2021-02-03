@@ -9,6 +9,7 @@ import { initialiseAccountsPage } from './modules/accounts';
 import { initAdminPage } from './modules/admin';
 import { initialiseAdminIngressPage } from './modules/adminIngress';
 import { initAdminRestorePage } from './modules/adminRestore';
+import { initialiseAdminSecretsPage } from './modules/adminSecrets';
 import { fetchAccountInfo as fetchEditAccountTeamsInfo } from './modules/editAccountTeams';
 import { initialiseClustersPage } from './modules/clusters';
 import { INITIALISE as initialiseDeploy } from './modules/deploy';
@@ -71,6 +72,10 @@ const paths = {
   adminRestore: {
     route: '/admin/restore',
     action: initAdminRestorePage,
+  },
+  adminSecrets: {
+    route: '/admin/secrets',
+    action: initialiseAdminSecretsPage,
   },
   clusterEdit: {
     route: '/admin/clusters/:clusterId/edit',

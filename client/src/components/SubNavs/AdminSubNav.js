@@ -8,6 +8,7 @@ import {
   AuditLink,
   EditClusterLink,
   AdminIngressLink,
+  AdminSecretsLink,
 } from '../Links';
 
 class AdminSubNav extends Component {
@@ -71,6 +72,11 @@ class AdminSubNav extends Component {
               </NavItem>
               : null
             }
+            <NavItem>
+              <AdminSecretsLink container>
+                <NavLink><i className="fa fa-key" aria-hidden='true'></i> Secrets</NavLink>
+              </AdminSecretsLink>
+            </NavItem>
           </Nav>
         </Col>
       </Row>

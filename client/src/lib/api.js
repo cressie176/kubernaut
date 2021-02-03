@@ -303,6 +303,16 @@ export const getReleases = ({ limit = 20, offset = 0, service, registry, version
 
 export const getRegistries = () => makeRequest('/api/registries').then(computePagination);
 
+export const getSecrets = ({ limit = 20, offset = 0, search }) => {
+  const qs = makeQueryString({
+    limit,
+    offset,
+    search,
+  });
+
+  return makeRequest(`/api/secrets/search?${qs}`).then(computePagination);
+};
+
 export const getSecretVersions = (registry, service, namespaceId, offset, limit) => makeRequest(`/api/secrets/${registry}/${service}/${namespaceId}?${makeQueryString({ offset, limit })}`)
 .then(computePagination);
 

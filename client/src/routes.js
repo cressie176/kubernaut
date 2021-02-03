@@ -11,6 +11,7 @@ import AccountTeamPage from './components/AccountTeamPage';
 import AdminClustersPage from './components/AdminClustersPage';
 import AdminIngressPage from './components/AdminIngressPage';
 import AdminRestorePage from './components/AdminRestorePage';
+import AdminSecretsPage from './components/AdminSecretsPage';
 import AdminSummaryPage from './components/AdminSummaryPage';
 import AuditPage from './components/AuditPage';
 import ClusterEditPage from './components/ClusterEditPage';
@@ -342,6 +343,11 @@ export default () => <Switch>
     exact
     path={paths.adminRestore.route}
     render={() => <Wrapper><AdminRestorePage /></Wrapper> }
+  />
+  <Route
+    exact
+    path={paths.adminSecrets.route}
+    render={() => <Wrapper><AdminSecretsPage /></Wrapper> }
   />
   <Route
     exact

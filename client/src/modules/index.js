@@ -7,6 +7,7 @@ import accounts from './accounts';
 import admin from './admin';
 import adminIngress from './adminIngress';
 import adminRestore from './adminRestore';
+import adminSecrets from './adminSecrets';
 import audit from './audit';
 import clusterEdit from './clusterEdit';
 import clusters from './clusters';
@@ -51,6 +52,7 @@ export default (history) => combineReducers({
   admin,
   adminIngress,
   adminRestore,
+  adminSecrets,
   audit,
   clusterEdit,
   clusters,
