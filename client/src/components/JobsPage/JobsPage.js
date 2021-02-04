@@ -43,6 +43,7 @@ class JobsPage extends Component {
       showFilters,
       hideFilters,
       error,
+      valid,
     } = this.props;
 
     return (
@@ -103,7 +104,11 @@ class JobsPage extends Component {
                           component={RenderSelect}
                           autoComplete="off"
                           options={registries.items.map(r => r.name)}
-                          />
+                          validate={(value) => {
+                            if (value) return;
+                            return 'Registry required';
+                          }}
+                        />
                       </Col>
                     </FormGroup>
                     <FormGroup row>
@@ -119,7 +124,7 @@ class JobsPage extends Component {
                             if (value.match(validName)) return;
                             return 'Invalid name';
                           }}
-                          />
+                        />
                       </Col>
                     </FormGroup>
                     <FormGroup row>
@@ -131,7 +136,11 @@ class JobsPage extends Component {
                           component={RenderNamespaces}
                           autoComplete="off"
                           options={namespaces.items}
-                          />
+                          validate={(value) => {
+                            if (value) return;
+                            return 'Namespace required';
+                          }}
+                        />
                       </Col>
                     </FormGroup>
                     <FormGroup row>
@@ -166,7 +175,8 @@ class JobsPage extends Component {
                           className="pull-right"
                           color="dark"
                           onClick={handleSubmit(submitForm)}
-                          >Create</Button>
+                          disabled={!valid}
+                        >Create</Button>
                       </Col>
                     </FormGroup>
                   </Form>

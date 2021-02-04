@@ -27,7 +27,7 @@ class RenderNamespaces extends Component {
   }
 
   render() {
-    const { input, className, options, disabled } = this.props;
+    const { input, className, options, disabled, meta } = this.props;
     const isDisabled = disabled || options.length === 0;
 
     const currentSelected = input.value ? options.find(v => (v.id === input.value)) : null;
@@ -68,6 +68,8 @@ class RenderNamespaces extends Component {
             ))
           }
         </DropdownMenu>
+        {meta.error && <span className="help-block"><span className="text-danger">{meta.error}</span></span>}
+        {meta.warning && <span className="help-block"><span className="text-warning">{meta.warning}</span></span>}
       </Dropdown>
     );
   }
