@@ -75,7 +75,7 @@ class PodEvents extends Component {
             </thead>
             <tbody>
               {this.props.events.map(e => (
-                <tr>
+                <tr key={e.metadata.uid}>
                   <td>{e.type}</td>
                   <td>{e.reason}</td>
                   <td><Ago date={e.metadata.creationTimestamp} /></td>
