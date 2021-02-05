@@ -72,7 +72,7 @@ class AdminSecretsPage extends Component {
             <Col>
               {
                 results.data.items.map(r => (
-                  <Card className="mb-2">
+                  <Card className="mb-2" key={r.id}>
                     <CardBody className="d-flex">
                       <div className="mr-4">
                         <SecretVersionLink secretVersion={r} />
