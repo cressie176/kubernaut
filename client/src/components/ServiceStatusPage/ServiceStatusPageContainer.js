@@ -2,6 +2,8 @@ import { connect } from 'react-redux';
 import { reduxForm } from 'redux-form';
 import {
   changeToNamespace,
+  startPolling,
+  stopPolling,
 } from '../../modules/serviceStatus';
 import ServiceStatusPage from './ServiceStatusPage';
 
@@ -19,6 +21,8 @@ export default connect((state, { registryName, serviceName }) => ({
   initialValues: state.serviceStatus.initialValues,
 }),{
   changeToNamespace,
+  startPolling,
+  stopPolling,
 })(reduxForm({
   form: 'serviceStatus',
   enableReinitialize: true,

@@ -10,12 +10,14 @@ import {
   FormGroup,
   Label,
   Table,
+  Form,
 } from 'reactstrap';
 import { Field } from 'redux-form';
 import Title from '../Title';
 import { ServicesSubNav } from '../SubNavs';
 import { Ago } from '../DisplayDate';
 import RenderNamespaces from '../RenderNamespaces';
+import RenderSwitch from '../RenderSwitch';
 
 class LogsContainer extends Component {
   componentDidMount() {
@@ -148,27 +150,49 @@ class ServiceStatusPage extends Component {
             canReadIngress={this.props.canReadIngress}
           />
           <Row>
-            <Col md="5">
-              <FormGroup row>
-                <Label sm="3" className="text-right" for="namespace">Namespace:</Label>
-                <Col md="9">
-                  <form>
+            <Col>
+              <Form>
+                <Row>
+                  <Col md="5" className="mr-auto">
+                    <FormGroup row>
+                      <Label sm="3" className="text-right" for="namespace">Namespace:</Label>
+                      <Col md="9">
+
+                        <Field
+                          className=""
+                          name="namespace"
+                          component={RenderNamespaces}
+                          options={this.props.namespacesRich}
+                          onChange={(evt, newValue) => {
+                            this.props.changeToNamespace({
+                              registry: this.props.registryName,
+                              service: this.props.serviceName,
+                              namespaceId: newValue
+                            });
+                          }}
+                          />
+                      </Col>
+                    </FormGroup>
+                  </Col>
+                  <Col className="col-auto">
                     <Field
-                      className=""
-                      name="namespace"
-                      component={RenderNamespaces}
-                      options={this.props.namespacesRich}
+                      name="refresh"
+                      component={RenderSwitch}
+                      label="Refresh automatically (5s)"
                       onChange={(evt, newValue) => {
-                        this.props.changeToNamespace({
-                          registry: this.props.registryName,
-                          service: this.props.serviceName,
-                          namespaceId: newValue
-                        });
+                        if (newValue) {
+                          this.props.startPolling({
+                            registry: this.props.registryName,
+                            service: this.props.serviceName,
+                          });
+                        } else {
+                          this.props.stopPolling();
+                        }
                       }}
-                      />
-                  </form>
-                </Col>
-              </FormGroup>
+                    />
+                  </Col>
+                </Row>
+              </Form>
             </Col>
           </Row>
           <Row>

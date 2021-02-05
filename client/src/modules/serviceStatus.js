@@ -21,6 +21,8 @@ export const fetchTeamForService = createAction(`${actionsPrefix}/FETCH_TEAM_FOR
 export const changeToNamespace = createAction(`${actionsPrefix}/CHANGE_TO_NAMESPACE`);
 export const setCanManage = createAction(`${actionsPrefix}/SET_CAN_MANAGE`);
 export const setCanReadIngress = createAction(`${actionsPrefix}/SET_CAN_READ_INGRESS`);
+export const startPolling = createAction(`${actionsPrefix}/START_POLLING`);
+export const stopPolling = createAction(`${actionsPrefix}/STOP_POLLING`);
 
 export const selectLatestDeployments = (state) => (state.serviceStatus.latestDeployments.data);
 

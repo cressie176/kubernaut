@@ -1,5 +1,6 @@
-import { takeLatest, call, put, select, take } from 'redux-saga/effects';
-import { push, replace } from 'connected-react-router';
+import { takeLatest, call, put, select, take, delay, cancel, fork } from 'redux-saga/effects';
+import { push, replace, LOCATION_CHANGE } from 'connected-react-router';
+import { getFormValues } from 'redux-form';
 
 import {
   initServiceStatusPage,
@@ -18,6 +19,8 @@ import {
   FETCH_TEAM_SUCCESS,
   selectLatestDeployments,
   changeToNamespace,
+  startPolling,
+  stopPolling,
 } from '../modules/serviceStatus';
 
 import {
@@ -101,9 +104,9 @@ export function* fetchTeamForServiceSaga({ payload = {} }) {
 }
 
 export function* fetchStatusSaga({ payload = {} }) {
-  const { registry, service, namespaceId, quiet } = payload;
+  const { registry, service, namespaceId, quiet, noLoading = false } = payload;
   try {
-    yield put(FETCH_STATUS_REQUEST());
+    if (!noLoading) yield put(FETCH_STATUS_REQUEST());
     const data = yield call(getStatusForService, { registry, service, namespaceId });
     yield put(FETCH_STATUS_SUCCESS({ data }));
   } catch (error) {
@@ -117,6 +120,32 @@ export function* changeToNamespaceSaga({ payload = {} }) {
   yield put(push(`/services/${registry}/${service}/status/${namespaceId}`));
 }
 
+export function* pollingSaga(registry, service, namespaceId) {
+  while(true) {
+    yield put(fetchStatus({
+      registry,
+      service,
+      namespaceId,
+      noLoading: true,
+    }));
+
+    yield delay(5000);
+  }
+}
+
+export function* stopPollingSaga() {
+  yield put(stopPolling());
+}
+
+export function* initPollingSaga({ payload = {} }) {
+  const { registry, service } = payload;
+  const namespaceId = (yield select(getFormValues('serviceStatus'))).namespace;
+
+  const poller = yield fork(pollingSaga, registry, service, namespaceId);
+  yield take(stopPolling);
+  yield cancel(poller);
+}
+
 export default [
   takeLatest(initServiceStatusPage, initServiceStatusPageSaga),
   takeLatest(initServiceStatusPage, canManageSaga),
@@ -125,4 +154,6 @@ export default [
   takeLatest(fetchTeamForService, fetchTeamForServiceSaga),
   takeLatest(fetchStatus, fetchStatusSaga),
   takeLatest(changeToNamespace, changeToNamespaceSaga),
+  takeLatest(startPolling, initPollingSaga),
+  takeLatest(LOCATION_CHANGE, stopPollingSaga),
 ];
