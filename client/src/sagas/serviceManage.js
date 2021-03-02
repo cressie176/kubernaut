@@ -40,6 +40,7 @@ import {
   selectServiceInfo,
   deleteService,
   closeDeleteModal,
+  setLogOutput,
 } from '../modules/serviceManage';
 
 import {
@@ -215,11 +216,16 @@ export function* updateTeamOwnershipSaga({ payload = {} }) {
 
 export function* deleteServiceSaga({ payload = {} }) {
   const options = payload;
-  const { registry, service } = yield select(selectServiceInfo);
   try {
-    yield call(deleteServiceRequest, registry, service);
-    yield put(closeDeleteModal());
-    yield put(push('/services'));
+    if (options.continue) {
+      yield put(closeDeleteModal());
+      yield put(push('/services'));
+      return;
+    }
+
+    const { registry, service } = yield select(selectServiceInfo);
+    const { log } = yield call(deleteServiceRequest, registry, service);
+    yield put(setLogOutput({ log }));
   } catch (error) {
     if (!options.quiet) console.error(error); // eslint-disable-line no-console
   }

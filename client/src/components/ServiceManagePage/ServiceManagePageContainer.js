@@ -25,6 +25,8 @@ export default connect(({ serviceManage, account }, { registryName, serviceName 
   team: serviceManage.team,
   manageableTeams: serviceManage.manageableTeams,
   deleteModalOpen: serviceManage.deleteModalOpen,
+  deleteLog: serviceManage.deleteLog,
+  deleteSubmitted: serviceManage.deleteSubmitted,
 }),{
   updateServiceStatusForNamespace,
   fetchNamespacesPagination,

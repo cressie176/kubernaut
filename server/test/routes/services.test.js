@@ -149,7 +149,7 @@ describe('Services API', () => {
         resolveWithFullResponse: true,
       });
 
-      expect(response.statusCode).toBe(204);
+      expect(response.statusCode).toBe(200);
       expect(await store.getService(release.service.id)).toBe(undefined);
     });
   });

@@ -46,6 +46,7 @@ import {
   canDeleteRequest,
   setCanReadIngress,
   canReadIngressRequest,
+  setLogOutput,
 } from '../../modules/serviceManage';
 
 import {
@@ -344,11 +345,17 @@ describe('ServiceManageSagas', () => {
   });
 
   describe('deleteServiceSaga', () => {
-    it('should delete a service', () => {
+    it('should delete a service and show log of result', () => {
       const service = { registry: 'abc', service: 'def' };
       const gen = deleteServiceSaga(deleteService);
       expect(gen.next().value).toMatchObject(select(selectServiceInfo));
       expect(gen.next(service).value).toMatchObject(call(deleteServiceRequest, 'abc', 'def'));
+      expect(gen.next({ log: [1,2,3] }).value).toMatchObject(put(setLogOutput({ log: [1,2,3] })));
+      expect(gen.next().done).toBe(true);
+    });
+
+    it('should close the modal & redirect on continue', () => {
+      const gen = deleteServiceSaga(deleteService({ continue: true }));
       expect(gen.next().value).toMatchObject(put(closeDeleteModal()));
       expect(gen.next().value).toMatchObject(put(push('/services')));
       expect(gen.next().done).toBe(true);

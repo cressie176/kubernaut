@@ -209,15 +209,50 @@ class ServiceManagePage extends Component {
                 <ModalBody>
                   <Row>
                     <Col>
-                      <p>Please note: <strong>This does not remove the service from the environment(s). Please remove the service from kubernetes separately.</strong></p>
+                      <p>Please note: <strong>This will remove the service from the environment(s) as well as any associated secrets, ingress or other definitions defined in a release manifest.</strong></p>
                     </Col>
                   </Row>
-                  <Row>
-                    <Col className="d-flex justify-content-between">
-                      <p>Are you sure?</p>
-                      <Button onClick={() => this.props.deleteService()} color="danger" outline>Delete</Button>
-                    </Col>
-                  </Row>
+                  { this.props.deleteLog && this.props.deleteLog.length ? (
+                    <Row>
+                      <Col>
+                        <Row>
+                          <Col>
+                            {
+                              this.props.deleteLog.map((line, idx) => (
+                                <pre key={`${idx}-${line.writtenOn}`}>
+                                  <code>
+                                    {line.content}
+                                  </code>
+                                </pre>
+                              ))
+                            }
+                          </Col>
+                        </Row>
+                        <Row>
+                          <Col className="d-flex justify-content-end">
+                            <Button
+                              onClick={() => this.props.deleteService({ continue: true })}
+                              color="dark"
+                              outline
+                            >Continue</Button>
+                          </Col>
+                        </Row>
+                      </Col>
+                    </Row>
+                  ) : (
+                    <Row>
+                      <Col className="d-flex justify-content-between">
+                        <p>Are you sure?</p>
+                        <Button
+                          disabled={this.props.deleteSubmitted}
+                          onClick={() => this.props.deleteService()}
+                          color="danger"
+                          outline
+                        >Delete</Button>
+                      </Col>
+                    </Row>
+                  ) }
+
                 </ModalBody>
               </Modal>
             ) : null }

@@ -225,7 +225,6 @@ export default function(options) {
     }
 
     async function findDeployments(criteria = {}, limit = 50, offset = 0, sort = 'created', order = 'desc') {
-
       logger.debug(`Listing up to ${limit} deployments starting from offset: ${offset}`);
 
       const bindVariables = {};
@@ -309,7 +308,7 @@ export default function(options) {
         }
 
         if (criteria.filters.namespaces) {
-          db.applyFilter(criteria.filters.namespace, 'n.id', findDeploymentsBuilder, countDeploymentsBuilder);
+          db.applyFilter(criteria.filters.namespaces, 'n.id', findDeploymentsBuilder, countDeploymentsBuilder);
         }
 
         if (criteria.filters.createdBy) {

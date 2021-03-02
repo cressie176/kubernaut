@@ -1,5 +1,7 @@
 import bodyParser from 'body-parser';
 import Boom from 'boom';
+import Promise from 'bluebird';
+import EventEmitter from 'events';
 import parseFilters from './lib/parseFilters';
 
 export default function(options = {}) {
@@ -58,10 +60,58 @@ export default function(options = {}) {
           service: 'name'
         }) });
         if (!service) return next(Boom.notFound());
+
+        const latestDeployments = await store.findLatestDeploymentsByNamespaceForService(registry.id, service.name, req.user, true);
+
+        const emitter = new EventEmitter();
+        const log = [];
+
+        emitter.on('data', async data => {
+          log.push(data);
+          res.locals.logger.info(data.content);
+        }).on('error', async data => {
+          log.push(data);
+          res.locals.logger.error(data.content);
+        });
+
+        await Promise.each(latestDeployments, async (latestDeployment) => {
+          const toDelete = [];
+          const deployment = await store.getDeployment((await store.findDeployments({
+            filters: {
+              service: { value: service.name },
+              registry: { value: registry.name },
+              namespaces: { value: [latestDeployment.namespace.id] },
+            },
+          }, 1, 0)).items[0].id);
+
+          toDelete.push({ objectType: 'secret', name: service.name });
+
+          if (deployment.attributes.ingress) {
+            const ingressVersion = await store.getIngressVersion(deployment.attributes.ingress);
+            ingressVersion.entries.forEach(entry => toDelete.push({ objectType: 'ingress', name: entry.name }));
+          }
+
+          deployment.manifest.json.forEach(doc => toDelete.push({
+            objectType: doc.kind.toLowerCase(),
+            name: doc.metadata.name,
+          }));
+
+          emitter.emit('data', { writtenOn: new Date(), writtenTo: 'stdout', content: `Deleting from: ${deployment.namespace.cluster.name}/${deployment.namespace.name}`});
+
+          await kubernetes.apply(
+            deployment.namespace.cluster.config,
+            deployment.namespace.cluster.context,
+            deployment.namespace.name,
+            '',
+            emitter,
+            toDelete
+          );
+        });
+
         const meta = { date: new Date(), account: req.user };
         await store.deleteService(service.id, meta);
         await store.audit(meta, 'deleted service', { service });
-        return res.status(204).send();
+        return res.status(200).send({ log });
       } catch (err) {
         next(err);
       }

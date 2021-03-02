@@ -233,6 +233,11 @@ async function deleteObjects(clients, toDelete, namespace, emitter) {
     } catch (errResult) {
       if (!errResult.response && !errResult.response.body && !errResult.response.body.message) throw errResult;
 
+      if (errResult.statusCode && errResult.statusCode === 404) {
+        emitter.emit('data', { writtenOn: new Date(), writtenTo: 'stdout', content: `${objectType}/${name} not found`});
+        continue;
+      }
+
       emitter.emit('error', { writtenOn: new Date(), writtenTo: 'stderr', content: errResult.response.body.message });
       throw new Error(errResult.response.body.message);
     }

@@ -29,6 +29,7 @@ export const setCanDelete = createAction(`${actionsPrefix}/SET_CAN_DELETE`);
 export const deleteService = createAction(`${actionsPrefix}/DELETE_SERVICE`);
 export const openDeleteModal = createAction(`${actionsPrefix}/OPEN_DELETE_MODAL`);
 export const closeDeleteModal = createAction(`${actionsPrefix}/CLOSE_DELETE_MODAL`);
+export const setLogOutput = createAction(`${actionsPrefix}/SET_LOG_OUTPUT`);
 
 export const selectNamespaces = (state) => (state.serviceManage.namespaces);
 export const selectPaginationState = (state) => (state.serviceManage.pagination);
@@ -78,6 +79,8 @@ const defaultState = {
   },
   manageableTeams: [],
   deleteModalOpen: false,
+  deleteLog: [],
+  deleteSubmitted: false,
 };
 
 export default handleActions({
@@ -244,5 +247,13 @@ export default handleActions({
   [closeDeleteModal]: (state) => ({
     ...state,
     deleteModalOpen: false,
+  }),
+  [setLogOutput]: (state, { payload }) => ({
+    ...state,
+    deleteLog: payload.log,
+  }),
+  [deleteService]: (state) => ({
+    ...state,
+    deleteSubmitted: true,
   }),
 }, defaultState);
