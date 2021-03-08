@@ -99,6 +99,21 @@ describe('Teams API', () => {
       });
     });
 
+    describe('POST /api/teams', () => {
+      it('should add a new team', async () => {
+        const response = await request({
+          url: `/api/teams/`,
+          method: 'POST',
+          json: {
+            name: 'rob'
+          }
+        });
+        expect(response.id).toBeDefined();
+        expect(response.name).toBe('rob');
+      });
+    });
+
+
     describe('GET /api/teams/:id', () => {
       it('retrieves a team', async () => {
         const team = await store.getTeam(await saveTeam(makeTeam({ attributes: { a: 'bc' } })));
