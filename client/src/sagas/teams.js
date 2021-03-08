@@ -1,4 +1,5 @@
 import { takeLatest, call, put, select } from 'redux-saga/effects';
+import { SubmissionError } from 'redux-form';
 import { push, getLocation } from 'connected-react-router';
 import {
   extractFromQuery,
@@ -30,12 +31,15 @@ import {
   selectTeamsPaginationState,
   selectServicesPaginationState,
   selectAccountsPaginationState,
+  submitForm,
+  getFormValues,
 } from '../modules/teams';
 
 import {
   getTeams,
   getAccountsWithNoMembership,
   getServicesWithNoTeam,
+  saveTeam,
 } from '../lib/api';
 
 export function* fetchTeamsDataSaga({ payload = {} }) {
@@ -112,6 +116,23 @@ export function* paginationSaga() {
   })}`));
 }
 
+export function* submitSaga() {
+  try {
+    const values = yield select(getFormValues);
+
+    if (!values.name) {
+      yield put(submitForm.failure());
+      return;
+    }
+    const data = yield call(saveTeam, values.name);
+    yield put(submitForm.success());
+    yield put(push(`/teams/${data.name}`));
+  } catch (err) {
+    console.error(err); // eslint-disable-line no-console
+    yield put(submitForm.failure(new SubmissionError({ _error: err.message || 'Something bad and unknown happened.' })));
+  }
+}
+
 export default [
   takeLatest(initialiseTeamsPage, locationChangeSaga),
   takeLatest(fetchTeams, fetchTeamsDataSaga),
@@ -120,4 +141,5 @@ export default [
   takeLatest(fetchTeamsPagination, paginationSaga),
   takeLatest(fetchServicesPagination, paginationSaga),
   takeLatest(fetchAccountsPagination, paginationSaga),
+  takeLatest(submitForm.REQUEST, submitSaga),
 ];

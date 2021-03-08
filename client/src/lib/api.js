@@ -845,6 +845,15 @@ export const saveSecretVersion = (registry, service, namespace, data) => {
   });
 };
 
+export const saveTeam = (name) => {
+  return makeRequest('/api/teams', {
+    method: 'POST',
+    body: JSON.stringify({
+      name,
+    }),
+  });
+};
+
 export const setServiceAttributesForNamespace = (registry, service, namespaceId, data) => makeRequest(`/api/service/${registry}/${service}/${namespaceId}/attributes`, {
   method: 'POST',
   body: JSON.stringify(data),
