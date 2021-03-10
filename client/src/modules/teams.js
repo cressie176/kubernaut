@@ -1,4 +1,8 @@
 import { createAction, handleActions, combineActions } from 'redux-actions';
+import { createFormAction } from 'redux-form-saga';
+import {
+  getFormValues as rfGetFormValues,
+} from 'redux-form';
 import computeLoading from './lib/computeLoading';
 
 const actionsPrefix = 'KUBERNAUT/TEAMS';
@@ -29,6 +33,14 @@ export const setAccountsPagination = createAction(`${actionsPrefix}/SET_ACCOUNTS
 export const selectTeamsPaginationState = (state) => (state.teams.teams.pagination);
 export const selectServicesPaginationState = (state) => (state.teams.services.pagination);
 export const selectAccountsPaginationState = (state) => (state.teams.accounts.pagination);
+
+export const openModal = createAction(`${actionsPrefix}/OPEN_MODAL`);
+export const closeModal = createAction(`${actionsPrefix}/CLOSE_MODAL`);
+
+export const getFormValues = (state) => rfGetFormValues('newTeam')(state);
+export const submitForm = createFormAction(`${actionsPrefix}/SUBMIT_FORM`);
+
+export const validateTeamName = createAction(`${actionsPrefix}/VALIDATE_TEAM_NAME`);
 
 const defaultState = {
   teams: {
@@ -83,6 +95,10 @@ const defaultState = {
       loadingPercent: 100,
     },
   },
+  newModalOpen: false,
+  initialValues: {
+    name: ''
+  }
 };
 
 export default handleActions({
@@ -184,5 +200,13 @@ export default handleActions({
         limit: payload.limit || defaultState.accounts.pagination.limit,
       },
     },
+  }),
+  [openModal]: (state) => ({
+    ...state,
+    newModalOpen: true,
+  }),
+  [closeModal]: (state) => ({
+    ...state,
+    newModalOpen: false,
   }),
 }, defaultState);

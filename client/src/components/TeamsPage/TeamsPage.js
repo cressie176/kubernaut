@@ -1,9 +1,23 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Row, Col, Table, Progress } from 'reactstrap';
+import { Field } from 'redux-form';
+import {
+  Row,
+  Col,
+  Table,
+  Progress,
+  Button,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  Form,
+  Label,
+  FormGroup,
+} from 'reactstrap';
 import TeamsTable from '../TeamsTable';
 import TablePagination from '../TablePagination';
 import { RegistryLink, ServiceLink, AccountLink } from '../Links';
+import RenderInput from '../RenderInput';
 
 class TeamsPage extends Component {
 
@@ -13,7 +27,16 @@ class TeamsPage extends Component {
       services,
       accounts,
       fetchTeamsPagination,
-      meta
+      meta,
+      openModal,
+      closeModal,
+      canCreate,
+      newModalOpen,
+      submitForm,
+      handleSubmit,
+      validateTeamName,
+      valid,
+      asyncValidating,
     } = this.props;
 
     if (meta.loading.loadingPercent !== 100) return (
@@ -30,6 +53,60 @@ class TeamsPage extends Component {
           <Row>
             <Col md="9">
               <TeamsTable teams={teams.data} fetchTeams={fetchTeamsPagination} />
+            </Col>
+            <Col>
+              {
+                canCreate ? (
+                  <Button
+                    color="dark"
+                    onClick={() => openModal()}
+                    >Create new team</Button>
+                ): null
+              }
+              <Modal
+                isOpen={newModalOpen}
+                toggle={closeModal}
+                size="lg"
+                >
+                <ModalHeader>
+                  <span>Create a new team</span>
+                </ModalHeader>
+                <ModalBody>
+                  <Row>
+                    <Col>
+                      <Form>
+                        <FormGroup row>
+                          <Label sm="3" className="text-right" for="name">Name:</Label>
+                          <Col sm="9">
+                            <Field
+                              className="form-control"
+                              name="name"
+                              component={RenderInput}
+                              type="text"
+                              autoComplete="off"
+                              onChangeListener={() => validateTeamName()}
+                              validate={(val) => {
+                                if (val.trim()) return;
+                                return 'Team name cannot be empty';
+                              }}
+                            />
+                          </Col>
+                        </FormGroup>
+                        <FormGroup row>
+                          <Col>
+                            <Button
+                              className="pull-right"
+                              color="dark"
+                              onClick={handleSubmit(submitForm)}
+                              disabled={!valid && !asyncValidating}
+                              >Create</Button>
+                          </Col>
+                        </FormGroup>
+                      </Form>
+                    </Col>
+                  </Row>
+                </ModalBody>
+              </Modal>
             </Col>
           </Row>
           <Row>

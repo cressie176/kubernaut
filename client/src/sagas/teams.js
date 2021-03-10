@@ -1,4 +1,5 @@
 import { takeLatest, call, put, select } from 'redux-saga/effects';
+import { SubmissionError, startAsyncValidation, stopAsyncValidation } from 'redux-form';
 import { push, getLocation } from 'connected-react-router';
 import {
   extractFromQuery,
@@ -30,12 +31,17 @@ import {
   selectTeamsPaginationState,
   selectServicesPaginationState,
   selectAccountsPaginationState,
+  submitForm,
+  getFormValues,
+  validateTeamName,
 } from '../modules/teams';
 
 import {
   getTeams,
   getAccountsWithNoMembership,
   getServicesWithNoTeam,
+  getTeamByName,
+  saveTeam,
 } from '../lib/api';
 
 export function* fetchTeamsDataSaga({ payload = {} }) {
@@ -112,6 +118,42 @@ export function* paginationSaga() {
   })}`));
 }
 
+export function* submitSaga() {
+  try {
+    const values = yield select(getFormValues);
+
+    if (!values.name) {
+      yield put(submitForm.failure());
+      return;
+    }
+    const data = yield call(saveTeam, values.name);
+    yield put(submitForm.success());
+    yield put(push(`/teams/${data.name}`));
+  } catch (err) {
+    console.error(err); // eslint-disable-line no-console
+    yield put(submitForm.failure(new SubmissionError({ _error: err.message || 'Something bad and unknown happened.' })));
+  }
+}
+
+export function* validateTeamNameSaga({ payload: options = {} }) {
+  const formValues = yield select(getFormValues);
+
+  const { name } = formValues;
+  if (!name.trim()) return;
+  try {
+    yield put(startAsyncValidation('newTeam', 'name'));
+    yield call(getTeamByName, name);
+    yield put(stopAsyncValidation('newTeam', { name: `'${name}' already exists`}));
+  } catch(error) {
+    if (error.status === 404) {
+      yield put(stopAsyncValidation('newTeam'));
+      return;
+    }
+    if (!options.quiet) console.error(error); // eslint-disable-line no-console
+    yield put(stopAsyncValidation('newTeam', { name: 'There was an error looking up teams' }));
+  }
+}
+
 export default [
   takeLatest(initialiseTeamsPage, locationChangeSaga),
   takeLatest(fetchTeams, fetchTeamsDataSaga),
@@ -120,4 +162,6 @@ export default [
   takeLatest(fetchTeamsPagination, paginationSaga),
   takeLatest(fetchServicesPagination, paginationSaga),
   takeLatest(fetchAccountsPagination, paginationSaga),
+  takeLatest(submitForm.REQUEST, submitSaga),
+  takeLatest(validateTeamName, validateTeamNameSaga),
 ];

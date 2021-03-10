@@ -25,6 +25,26 @@ export default function(options = {}) {
       }
     });
 
+    app.post('/api/teams', bodyParser.json(), async (req, res, next) => {
+      try {
+        if (! await store.hasPermission(req.user, 'teams-write')) return next(Boom.forbidden());
+        const { name } = req.body;
+        const criteria = {
+          filters: parseFilters({ name }, ['name']),
+        };
+        const team = await store.findTeam(criteria);
+        if (team) return next(Boom.badRequest());
+        const meta = { date: new Date(), account: req.user };
+        const newTeamId = await store.saveTeam({ name }, meta);
+        const newTeam = await store.getTeam(newTeamId);
+        await store.audit(meta, 'created team', { team: newTeam });
+        return res.json(newTeam);
+
+      } catch (err) {
+        next(err);
+      }
+    });
+
     app.get('/api/teams/:id', async (req, res, next) => {
       try {
         const { id } = req.params;

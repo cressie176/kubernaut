@@ -36,6 +36,7 @@ const makeRequest = async (url, options = {}) => {
 
     const toThrow = new Error(message);
     if (serverError) toThrow.data = serverError;
+    toThrow.status = res.status;
     throw toThrow;
   }
   if (res.status === 204) return;
@@ -842,6 +843,15 @@ export const saveSecretVersion = (registry, service, namespace, data) => {
   return makeRequest(`/api/secrets/${registry}/${service}/${namespace}`, {
     method: 'POST',
     body: JSON.stringify(data),
+  });
+};
+
+export const saveTeam = (name) => {
+  return makeRequest('/api/teams', {
+    method: 'POST',
+    body: JSON.stringify({
+      name,
+    }),
   });
 };
 

@@ -17,6 +17,7 @@ const defaultState = {
     'audit-read': false,
     'clusters-write': false,
     'ingress-admin': false,
+    'teams-write': false,
   },
   showAdmin: false,
 };
