@@ -40,6 +40,7 @@ export const closeModal = createAction(`${actionsPrefix}/CLOSE_MODAL`);
 export const getFormValues = (state) => rfGetFormValues('newTeam')(state);
 export const submitForm = createFormAction(`${actionsPrefix}/SUBMIT_FORM`);
 
+export const validateTeamName = createAction(`${actionsPrefix}/VALIDATE_TEAM_NAME`);
 
 const defaultState = {
   teams: {

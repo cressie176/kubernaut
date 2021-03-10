@@ -36,6 +36,7 @@ const makeRequest = async (url, options = {}) => {
 
     const toThrow = new Error(message);
     if (serverError) toThrow.data = serverError;
+    toThrow.status = res.status;
     throw toThrow;
   }
   if (res.status === 204) return;

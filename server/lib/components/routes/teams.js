@@ -43,7 +43,7 @@ export default function(options = {}) {
       } catch (err) {
         next(err);
       }
-    })
+    });
 
     app.get('/api/teams/:id', async (req, res, next) => {
       try {

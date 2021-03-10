@@ -1,5 +1,5 @@
 import { takeLatest, call, put, select } from 'redux-saga/effects';
-import { SubmissionError } from 'redux-form';
+import { SubmissionError, startAsyncValidation, stopAsyncValidation } from 'redux-form';
 import { push, getLocation } from 'connected-react-router';
 import {
   extractFromQuery,
@@ -33,12 +33,14 @@ import {
   selectAccountsPaginationState,
   submitForm,
   getFormValues,
+  validateTeamName,
 } from '../modules/teams';
 
 import {
   getTeams,
   getAccountsWithNoMembership,
   getServicesWithNoTeam,
+  getTeamByName,
   saveTeam,
 } from '../lib/api';
 
@@ -133,6 +135,25 @@ export function* submitSaga() {
   }
 }
 
+export function* validateTeamNameSaga({ payload: options = {} }) {
+  const formValues = yield select(getFormValues);
+
+  const { name } = formValues;
+  if (!name.trim()) return;
+  try {
+    yield put(startAsyncValidation('newTeam', 'name'));
+    yield call(getTeamByName, name);
+    yield put(stopAsyncValidation('newTeam', { name: `'${name}' already exists`}));
+  } catch(error) {
+    if (error.status === 404) {
+      yield put(stopAsyncValidation('newTeam'));
+      return;
+    }
+    if (!options.quiet) console.error(error); // eslint-disable-line no-console
+    yield put(stopAsyncValidation('newTeam', { name: 'There was an error looking up teams' }));
+  }
+}
+
 export default [
   takeLatest(initialiseTeamsPage, locationChangeSaga),
   takeLatest(fetchTeams, fetchTeamsDataSaga),
@@ -142,4 +163,5 @@ export default [
   takeLatest(fetchServicesPagination, paginationSaga),
   takeLatest(fetchAccountsPagination, paginationSaga),
   takeLatest(submitForm.REQUEST, submitSaga),
+  takeLatest(validateTeamName, validateTeamNameSaga),
 ];

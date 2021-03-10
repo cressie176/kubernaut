@@ -34,6 +34,9 @@ class TeamsPage extends Component {
       newModalOpen,
       submitForm,
       handleSubmit,
+      validateTeamName,
+      valid,
+      asyncValidating,
     } = this.props;
 
     if (meta.loading.loadingPercent !== 100) return (
@@ -81,6 +84,11 @@ class TeamsPage extends Component {
                               component={RenderInput}
                               type="text"
                               autoComplete="off"
+                              onChangeListener={() => validateTeamName()}
+                              validate={(val) => {
+                                if (val.trim()) return;
+                                return 'Team name cannot be empty';
+                              }}
                             />
                           </Col>
                         </FormGroup>
@@ -90,6 +98,7 @@ class TeamsPage extends Component {
                               className="pull-right"
                               color="dark"
                               onClick={handleSubmit(submitForm)}
+                              disabled={!valid && !asyncValidating}
                               >Create</Button>
                           </Col>
                         </FormGroup>

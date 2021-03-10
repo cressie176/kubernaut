@@ -8,6 +8,7 @@ import {
   openModal,
   closeModal,
   submitForm,
+  validateTeamName,
 } from '../../modules/teams';
 
 function mapStateToProps(state, props) {
@@ -29,6 +30,7 @@ export default connect(mapStateToProps, {
   fetchServicesPagination,
   openModal,
   closeModal,
+  validateTeamName,
 })(reduxForm({
   form: 'newTeam',
   enableReinitialize: true,
