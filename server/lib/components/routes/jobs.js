@@ -21,6 +21,7 @@ function valuesFromYaml(parsed) {
       return acc.concat({ key, value });
     }, []),
     concurrencyPolicy: _get(spec, 'concurrencyPolicy', 'Allow'),
+    startingDeadlineSeconds: _get(spec, 'startingDeadlineSeconds', null),
     initContainers: _get(spec, 'jobTemplate.spec.template.spec.initContainers', []).map(c => {
       const toReturn = {
         ...c,
@@ -144,6 +145,7 @@ function buildSpec (values, job) {
     spec: {
       schedule: values.schedule || '',
       concurrencyPolicy: values.concurrencyPolicy || '',
+      startingDeadlineSeconds: parseInt(values.startingDeadlineSeconds) || null,
       jobTemplate: {
         spec: {
           template: {

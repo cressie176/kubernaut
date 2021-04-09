@@ -30,6 +30,9 @@ const help = {
   concurrency: {
     body: 'How should kubernetes handle the scenario of multiple instances of a job running at once.'
   },
+  startingDeadline: {
+    body: 'Deadline in seconds for starting the job if it misses its scheduled time for any reason. After the deadline, the cron job does not start the job. (Optional)',
+  },
   envFrom: {
     body: 'Inject the job secret as environment variables to this container.'
   },
@@ -731,6 +734,18 @@ class NewJobVersionPage extends Component {
                       component={RenderSelect}
                       autoComplete="off"
                       options={['Allow', 'Forbid', 'Replace']}
+                      onChangeListener={() => this.props.triggerPreview()}
+                    />
+                  </Col>
+                </FormGroup>
+                <FormGroup row>
+                  <Label sm="5" className="text-right" for="startingDeadlineSeconds">Starting deadline: <Popover {...help.startingDeadline} classNames="d-inline" /></Label>
+                  <Col sm="7">
+                    <Field
+                      className="form-control"
+                      name="startingDeadlineSeconds"
+                      component={RenderInput}
+                      autoComplete="off"
                       onChangeListener={() => this.props.triggerPreview()}
                     />
                   </Col>

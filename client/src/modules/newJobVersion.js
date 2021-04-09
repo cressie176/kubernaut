@@ -50,6 +50,7 @@ const defaultState = {
   initialValues: {
     schedule: '0 * * * *',
     concurrencyPolicy: 'Replace',
+    startingDeadlineSeconds: null,
     secret: {
       secrets: [],
       newSecretSection: {

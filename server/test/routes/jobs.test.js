@@ -19,6 +19,7 @@ metadata:
 spec:
   schedule: 0 * * * *
   concurrencyPolicy: Replace
+  startingDeadlineSeconds: null
   jobTemplate:
     spec:
       template:
@@ -328,6 +329,7 @@ describe('Jobs API', () => {
           { key: 'cronjobUuid', value: response.job.id }
         ],
         concurrencyPolicy: 'Replace',
+        startingDeadlineSeconds: null,
         initContainers: [
           {
             name: 'init',
@@ -384,6 +386,7 @@ describe('Jobs API', () => {
             { key: 'cronjobName', value: 'a-cronjob' }
           ],
           concurrencyPolicy: 'Replace',
+          startingDeadlineSeconds: null,
           initContainers: [
             {
               name: 'init',
