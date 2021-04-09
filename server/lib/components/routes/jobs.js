@@ -145,7 +145,7 @@ function buildSpec (values, job) {
     spec: {
       schedule: values.schedule || '',
       concurrencyPolicy: values.concurrencyPolicy || '',
-      startingDeadlineSeconds: parseInt(values.startingDeadlineSeconds) || null,
+      startingDeadlineSeconds: parseInt(values.startingDeadlineSeconds, 10) || null,
       jobTemplate: {
         spec: {
           template: {
