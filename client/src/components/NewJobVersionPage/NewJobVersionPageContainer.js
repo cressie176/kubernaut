@@ -28,6 +28,10 @@ const validate = (values, props) => {
   if (!values.schedule) errors.schedule = 'Invalid cron syntax';
   else if (!isValidCron(values.schedule, { alias: true })) errors.schedule = 'Invalid cron syntax';
 
+  if (values.startingDeadlineSeconds && (isNaN(values.startingDeadlineSeconds) || parseInt(values.startingDeadlineSeconds, 10) < 0) ) {
+    errors.startingDeadlineSeconds = 'Invalid starting deadline';
+  }
+
   errors.initContainers = (values.containers || []).map(c => ({
     name: (c.name || '').match(validName) ? null : 'Invalid name',
     image: c.image ? null : 'Cannot be empty',
