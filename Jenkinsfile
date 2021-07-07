@@ -5,6 +5,7 @@ state.set('dockerfile.postcommands', [
   'npm run lint',
   'npm run build-client',
   'npm run build-server',
+  'ln -s /app/bin/aws-iam-authenticator /usr/local/bin/aws-iam-authenticator',
 ])
 
 CheckoutAndDecrypt() {
