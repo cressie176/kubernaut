@@ -11,7 +11,6 @@ COPY .npmrc .
 
 ARG CI
 
-RUN apt install ca-certificates
 RUN npm --quiet ci
 
 COPY . .
