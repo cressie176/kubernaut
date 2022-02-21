@@ -1,0 +1,10 @@
+ARG BUILD_IMAGE
+FROM $BUILD_IMAGE AS build
+FROM node:14.17.3-slim AS run
+
+CMD ["node", "."]
+
+WORKDIR /app
+ENV NODE_ENV=production
+
+COPY --from=build /app .
