@@ -1,6 +1,6 @@
 ARG BUILD_IMAGE
 FROM $BUILD_IMAGE AS build
-FROM node:14.17.3-slim AS run
+FROM node:14.19.0-slim AS run
 
 CMD ["node", "."]
 
