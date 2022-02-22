@@ -7,6 +7,4 @@ CMD ["node", "."]
 WORKDIR /app
 ENV NODE_ENV=production
 
-RUN apt install ca-certificates
-
 COPY --from=build /app .
