@@ -3,8 +3,6 @@ FROM base AS build
 
 WORKDIR /app
 
-RUN apt install ca-certificates
-
 COPY package.json .
 
 COPY package-lock.json .
