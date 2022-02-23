@@ -1,1 +1,1 @@
-docker/Dockerfile.build
+docker/Dockerfile
