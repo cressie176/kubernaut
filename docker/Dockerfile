@@ -17,6 +17,7 @@ COPY . .
 
 RUN npm run install-client
 RUN npm run lint
+RUN npx browserslist@latest --update-db
 RUN npm run build-client
 RUN npm run build-server
 
