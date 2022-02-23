@@ -22,6 +22,5 @@ RUN npm run build-server
 
 CMD ["node", "."]
 ENV NODE_ENV=production
-COPY --from=build /app .
 RUN apt update
 RUN apt install ca-certificates
