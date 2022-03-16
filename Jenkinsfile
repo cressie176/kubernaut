@@ -10,7 +10,6 @@ state.set('dockerfile.postcommands', [
 CheckoutAndDecrypt() {
   BoscoDependencies()
 
-  GenerateDockerfile()
   BuildDockerfile()
 
 }
